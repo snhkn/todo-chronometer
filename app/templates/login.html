@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row align-items-center g-lg-5">
+        <div class="col-lg-7 text-center text-lg-start">
+            <h1 class="display-4 fw-bold lh-1 mb-3">Log In</h1>
+            <p class="col-lg-10 fs-4">Welcome back! Please enter your credentials to log in.</p>
+        </div>
+        <div class="col-md-10 mx-auto col-lg-5">
+            <form class="p-4 p-md-5 border rounded-3 bg-light" action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="form-floating mb-3">
+                    {{ form.username(class="form-control", placeholder="Username") }}
+                    <label for="username">{{ form.username.label.text }}</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form.password(class="form-control", placeholder="Password") }}
+                    <label for="password">{{ form.password.label.text }}</label>
+                </div>
+
+                <div class="form-check mb-3">
+                    {{ form.remember_me(class="form-check-input") }}
+                    <label class="form-check-label" for="remember_me">
+                        {{ form.remember_me.label.text }}
+                    </label>
+                </div>
+
+                <button class="w-100 btn btn-lg btn-success" type="submit">{{ form.submit.label.text }}</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

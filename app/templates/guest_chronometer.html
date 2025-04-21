@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="mb-4">Timer for: <span id="todo-text"></span></h1>
+
+            <h2 id="timer-display" class="mb-4">00:00:00</h2>
+
+            <div class="d-flex justify-content-center gap-3">
+                <button id="start-btn" class="btn btn-success">Start</button>
+                <button id="stop-btn" class="btn btn-danger">Stop</button>
+                <button id="reset-btn" class="btn btn-warning">Reset</button>
+                <button id="save-btn" class="btn btn-primary">Save & Return</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% raw %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let urlParts = window.location.pathname.split('/');
+    let todoId = Number(urlParts[urlParts.length - 1]); // get ID from URL
+    let todos = JSON.parse(localStorage.getItem('todos')) || [];
+    let todo = todos.find(t => t.id === todoId);
+
+    if (!todo) {
+        alert('Todo not found!');
+        window.location.href = '/';
+        return;
+    }
+
+    const todoTextElement = document.getElementById('todo-text');
+    const timerDisplay = document.getElementById('timer-display');
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const saveBtn = document.getElementById('save-btn');
+
+    todoTextElement.textContent = todo.text;
+
+    let timer = null;
+    let elapsedTime = todo.time || 0;
+
+    function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function updateDisplay() {
+        timerDisplay.textContent = formatTime(elapsedTime);
+    }
+
+    startBtn.addEventListener('click', function() {
+        if (timer === null) {
+            timer = setInterval(function() {
+                elapsedTime++;
+                updateDisplay();
+            }, 1000);
+        }
+    });
+
+    stopBtn.addEventListener('click', function() {
+        clearInterval(timer);
+        timer = null;
+    });
+
+    resetBtn.addEventListener('click', function() {
+        // Reset the timer to 0
+        elapsedTime = 0;
+        updateDisplay();
+    });
+
+    saveBtn.addEventListener('click', function() {
+        clearInterval(timer);
+        timer = null;
+        // Update the todo's time
+        todo.time = elapsedTime;
+        // Save back to localStorage
+        const updatedTodos = todos.map(t => (t.id === todo.id ? todo : t));
+        localStorage.setItem('todos', JSON.stringify(updatedTodos));
+        window.location.href = '/';  // Go back to main page
+    });
+
+    // Initialize display
+    updateDisplay();
+});
+</script>
+{% endraw %}
+{% endblock %}

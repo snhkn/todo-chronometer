@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="mb-4">Timer for: {{ todo.text }}</h1>
+
+            <h2 id="timer" class="mb-4">00:00:00</h2>
+
+            <div class="d-flex justify-content-center gap-3">
+                <button class="btn btn-success" id="start-btn">Start</button>
+                <button class="btn btn-danger" id="stop-btn">Stop</button>
+                <button class="btn btn-warning" id="reset-btn">Reset</button>
+                <button class="btn btn-primary" id="save-btn">Save & Return</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let totalSeconds = {{ todo.time | default(0) | tojson }};
+    let timer = null;
+    let running = false;
+
+    const timerDisplay = document.getElementById('timer');
+    const startBtn = document.getElementById('start-btn');
+    const stopBtn = document.getElementById('stop-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const saveBtn = document.getElementById('save-btn');
+
+    function formatTime(seconds) {
+        const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+        const min = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+        const sec = String(seconds % 60).padStart(2, '0');
+        return `${hrs}:${min}:${sec}`;
+    }
+
+    function updateDisplay() {
+        timerDisplay.textContent = formatTime(totalSeconds);
+    }
+
+    startBtn.addEventListener('click', function() {
+        if (!running) {
+            running = true;
+            timer = setInterval(() => {
+                totalSeconds++;
+                updateDisplay();
+            }, 1000);
+        }
+    });
+
+    stopBtn.addEventListener('click', function() {
+        if (running) {
+            clearInterval(timer);
+            running = false;
+
+            // Save to backend
+            fetch("/update_time/{{ todo.id | default(0) }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ time: totalSeconds })
+            });
+        }
+    });
+
+    resetBtn.addEventListener('click', function() {
+        totalSeconds = 0;
+        updateDisplay();
+    });
+
+    saveBtn.addEventListener('click', function() {
+        // Stop timer if running
+        if (running) {
+            clearInterval(timer);
+            running = false;
+        }
+
+        // Save the time before returning
+        fetch("/update_time/{{ todo.id | default(0) }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ time: totalSeconds })
+        }).then(() => {
+            window.location.href = '/';  // Redirect to home after saving
+        });
+    });
+
+    updateDisplay();
+});
+</script>
+{% endblock %}

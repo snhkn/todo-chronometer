@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row align-items-center g-lg-5">
+        <div class="col-lg-7 text-center text-lg-start">
+            <h1 class="display-4 fw-bold lh-1 mb-3">Create an Account</h1>
+            <p class="col-lg-10 fs-4">Join us today! Fill out the form below to get started.</p>
+        </div>
+        <div class="col-md-10 mx-auto col-lg-5">
+            <form class="p-4 p-md-5 border rounded-3 bg-light" action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="form-floating mb-3">
+                    {{ form.username(class="form-control", placeholder="Username") }}
+                    <label for="username">{{ form.username.label.text }}</label>
+                    {% for error in form.username.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form.email(class="form-control", placeholder="Email") }}
+                    <label for="email">{{ form.email.label.text }}</label>
+                    {% for error in form.email.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form.password(class="form-control", placeholder="Password") }}
+                    <label for="password">{{ form.password.label.text }}</label>
+                    {% for error in form.password.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-floating mb-3">
+                    {{ form.password2(class="form-control", placeholder="Repeat Password") }}
+                    <label for="password2">{{ form.password2.label.text }}</label>
+                    {% for error in form.password2.errors %}
+                        <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+
+                <button class="w-100 btn btn-lg btn-success" type="submit">{{ form.submit.label.text }}</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
