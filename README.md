@@ -70,13 +70,6 @@ Then visit [http://localhost:5000](http://localhost:5000) in your browser.
 
 
 
-**To deploy:**
-- Create a `requirements.txt` and `Procfile`
-- Push to GitHub
-- Connect to your hosting platform
-- Set environment variables
-- Deploy!
-
 ## 📸 Screenshots
 
 ```markdown
