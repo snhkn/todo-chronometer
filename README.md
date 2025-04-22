@@ -75,7 +75,7 @@ Then visit [http://localhost:5000](http://localhost:5000) in your browser.
 ```markdown
 ![Home Page](screenshots/mainpage.png)
 ![Task Timer](screenshots/chronometerpage.png)
-![Todo List with Timer](screenhots/todowithtimepage.png)
+![Todo List with Timer](screenshots/todowithtimepage.png)
 ```
 
 ## 🔮 Future Improvements
